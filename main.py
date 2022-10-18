@@ -1,9 +1,43 @@
 import cv2
 
-image = cv2.imread("./envie.png")
+ressources_path = "ressources/"
+
+STEP = 20
+
+CUT_NB = 3
+
+A_X = 0.0
+A_Y = 208.0
+B_X = 298.0
+B_Y = 0.0
+
+C_X = 0.0
+C_Y = 473.0
+D_X = 300.0
+D_Y = 680.0
+
+
+def isInside(i, j):
+    if (B_Y - A_Y)/(B_X - A_X) * i + A_Y >= j:
+        return False
+    if (D_Y - C_Y)/(D_X - C_X) * i + C_Y <= j:
+        return False
+    if -0.00239*j*j + 1.62919*j - 235 >= i:
+        return False
+    if -0.00091*j*j + 0.61765*j + 300 <= i:
+        return False
+    return True
+
+
+image = cv2.imread(ressources_path + "2019010A.jpg")
+
+for i in range(0, image.shape[0]):
+    for j in range(0, image.shape[1]):
+        if isInside(i, j) == False:
+            image[i, j] = [100, 0, 0]
+
 cv2.imshow("wow", image)
 cv2.waitKey(0)
-
 
 """
 #define STEP 20
