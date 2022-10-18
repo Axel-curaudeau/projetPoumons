@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 
 ressources_path = "ressources/"
 
@@ -28,6 +29,35 @@ def isInside(i, j):
         return False
     return True
 
+def proba(img, color):
+    proba = 0
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            if (isInside(i, j)):
+                colorGray = int(img[i, j][0]) + int(img[i, j][1]) + int(img[i, j][2])
+                colorGray = colorGray/3
+                if (colorGray == color):
+                    proba +=1
+    return (proba/(img.shape[0] * img.shape[1]))
+
+def proba2(img, colorStep):
+    proba = [0 for i in range(0, 254, colorStep)]
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            if (isInside(i, j)):
+                colorGray = int(img[i, j][0]) + int(img[i, j][1]) + int(img[i, j][2])
+                colorGray = colorGray / 3
+                proba[int(colorGray/colorStep)] += 1
+    for i in range(len(proba)):
+        proba[i] = proba[i]/(img.shape[0] * img.shape[1])
+    return proba
+def entropia(img, colorStep):
+    entropia = 0
+    proba = proba2(img, colorStep)
+    for i in range(len(proba)):
+        if (proba[i] != 0):
+            entropia += proba[i] * np.log(1/proba[i])
+    return entropia
 
 image = cv2.imread(ressources_path + "2019010A.jpg")
 
@@ -35,6 +65,8 @@ for i in range(0, image.shape[0]):
     for j in range(0, image.shape[1]):
         if isInside(i, j) == False:
             image[i, j] = [100, 0, 0]
+
+print(entropia(image, 1))
 
 cv2.imshow("wow", image)
 cv2.waitKey(0)
