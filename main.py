@@ -18,46 +18,41 @@ D_X = 300.0
 D_Y = 680.0
 
 
-def isInside(i, j):
-    if (B_Y - A_Y)/(B_X - A_X) * i + A_Y >= j:
+def isInside(x, y):
+    if (B_Y - A_Y)/(B_X - A_X) * x + A_Y >= y:
         return False
-    if (D_Y - C_Y)/(D_X - C_X) * i + C_Y <= j:
+    if (D_Y - C_Y)/(D_X - C_X) * x + C_Y <= y:
         return False
-    if -0.00239*j*j + 1.62919*j - 235 >= i:
+    if -0.00239*y*y + 1.62919*y - 235 >= x:
         return False
-    if -0.00091*j*j + 0.61765*j + 300 <= i:
+    if -0.00091*y*y + 0.61765*y + 300 <= x:
         return False
     return True
 
-def proba(img, color):
-    proba = 0
-    for i in range(img.shape[0]):
-        for j in range(img.shape[1]):
-            if (isInside(i, j)):
-                colorGray = int(img[i, j][0]) + int(img[i, j][1]) + int(img[i, j][2])
-                colorGray = colorGray/3
-                if (colorGray == color):
-                    proba +=1
-    return (proba/(img.shape[0] * img.shape[1]))
 
-def proba2(img, colorStep):
-    proba = [0 for i in range(0, 254, colorStep)]
-    for i in range(img.shape[0]):
-        for j in range(img.shape[1]):
-            if (isInside(i, j)):
-                colorGray = int(img[i, j][0]) + int(img[i, j][1]) + int(img[i, j][2])
-                colorGray = colorGray / 3
-                proba[int(colorGray/colorStep)] += 1
-    for i in range(len(proba)):
-        proba[i] = proba[i]/(img.shape[0] * img.shape[1])
-    return proba
+def proba(img, colorStep):
+    probaValue = [0 for _ in range(0, 254, colorStep)]
+    for x in range(img.shape[0]):
+        for y in range(img.shape[1]):
+            if isInside(x, y):
+                probaValue[int(img[x, y][0]/colorStep)] += 1
+    for x in range(len(probaValue)):
+        probaValue[x] = probaValue[x]/(img.shape[0] * img.shape[1])
+    return probaValue
+
+
 def entropia(img, colorStep):
-    entropia = 0
-    proba = proba2(img, colorStep)
-    for i in range(len(proba)):
-        if (proba[i] != 0):
-            entropia += proba[i] * np.log(1/proba[i])
-    return entropia
+    entropiaValue = 0
+    probaValue = proba(img, colorStep)
+    for v in range(len(probaValue)):
+        if probaValue[v] != 0:
+            entropiaValue += probaValue[v] * np.log(1/probaValue[v])
+    return entropiaValue
+
+
+def imgCut(img, cutNb):
+    pass
+
 
 image = cv2.imread(ressources_path + "2019010A.jpg")
 
