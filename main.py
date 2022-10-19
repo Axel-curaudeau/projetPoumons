@@ -50,8 +50,23 @@ def entropia(img, colorStep):
     return entropiaValue
 
 
-def imgCut(img, cutNb):
-    pass
+def imgCut(img, nbCut):
+    listImage = []
+    x, y = 0, 0
+    cutImageSizeX = int(img.shape[0]/nbCut)
+    cutImageSizeY = int(img.shape[1]/nbCut)
+    #print(cutImageSizeY, cutImageSizeX)
+    for i in range(1, nbCut + 1):
+        for j in range(1, nbCut + 1):
+            print(x, (i * cutImageSizeX), y, (j * cutImageSizeY))
+            listImage.append(img[x: (i * cutImageSizeX), y:(j * cutImageSizeY)])
+
+            y = j * cutImageSizeY
+        x = i * cutImageSizeX
+        y = 0
+    return listImage
+
+
 
 
 image = cv2.imread(ressources_path + "2019010A.jpg")
@@ -63,7 +78,11 @@ for i in range(0, image.shape[0]):
 
 print(entropia(image, 1))
 
-cv2.imshow("wow", image)
+imagette = imgCut(image, 4)
+
+#cv2.imshow("wow", image)
+for i in range(len(imagette)):
+    cv2.imshow(str(i), imagette[i])
 cv2.waitKey(0)
 
 """
