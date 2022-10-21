@@ -1,5 +1,5 @@
 # Travail à faire
-- Réoganiser le projet (avec des classes/modules par exemple)
+- Réoganiser le projet (avec des classes/modules)
 - Tester si la valeur de l'entropie peut vraiment compter les lignes B ? 
   Comment ? en ne gardant que le centre et la partie interesssante ?
 
