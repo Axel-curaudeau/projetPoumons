@@ -46,40 +46,43 @@ def is_inside(x, y):
 
 
 def proba(img, color_step):
-    probaValue = [0 for _ in range(0, 254, color_step)]
+    proba_value = [0 for _ in range(0, 254, color_step)]
     for x in range(img.shape[0]):
         for y in range(img.shape[1]):
             if is_inside(x, y):
-                probaValue[int(img[x, y][0] / color_step)] += 1
-    for x in range(len(probaValue)):
-        probaValue[x] = probaValue[x] / (img.shape[0] * img.shape[1])
-    return probaValue
+                proba_value[int(img[x, y][0] / color_step)] += 1
+    for x in range(len(proba_value)):
+        proba_value[x] = proba_value[x] / (img.shape[0] * img.shape[1])
+    return proba_value
 
 
 def entropia(img, color_step):
     entropia_value = 0
-    probaValue = proba(img, color_step)
-    for v in range(len(probaValue)):
-        if probaValue[v] != 0:
-            entropia_value += probaValue[v] * np.log(1 / probaValue[v])
+    proba_value = proba(img, color_step)
+    for value in range(len(proba_value)):
+        if proba_value[value] != 0:
+            entropia_value += proba_value[value] \
+                              * np.log(1 / proba_value[value])
     return entropia_value
 
 
 def cut_image(img, nb_cut):
-    listImage = []
-    x, y = 0, 0
-    cutImageSizeX = int(img.shape[0] / nb_cut)
-    cutImageSizeY = int(img.shape[1] / nb_cut)
-    # print(cutImageSizeY, cutImageSizeX)
+    image_list = []
+    x = 0
+    y = 0
+    cutted_image_width = int(img.shape[0] / nb_cut)
+    cutted_image_height = int(img.shape[1] / nb_cut)
+    # print(cutted_image_height, cutted_image_width)
     for i in range(1, nb_cut + 1):
         for j in range(1, nb_cut + 1):
-            print(x, (i * cutImageSizeX), y, (j * cutImageSizeY))
-            listImage.append(img[x: (i * cutImageSizeX), y:(j * cutImageSizeY)])
+            print(x, (i * cutted_image_width), y, (j * cutted_image_height))
+            image_list.append(img[x: (i * cutted_image_width),
+                                  y: (j * cutted_image_height)])
 
-            y = j * cutImageSizeY
-        x = i * cutImageSizeX
+            y = j * cutted_image_height
+        x = i * cutted_image_width
         y = 0
-    return listImage
+    return image_list
 
 
 image = cv2.imread(ressources_path + "2019010A.jpg")
