@@ -18,46 +18,61 @@ D_X = 300.0
 D_Y = 680.0
 
 
-def isInside(x, y):
-    if (B_Y - A_Y)/(B_X - A_X) * x + A_Y >= y:
+def is_inside(x, y):
+    """
+    Check if a point is inside the echographie
+
+    Parameters
+    ----------
+    x : int
+        x coordinate of the point
+    y : int
+        y coordinate of the point
+
+    Returns
+    -------
+    bool
+        True if the point is inside the echographie shape, False otherwise
+    """
+    if (B_Y - A_Y) / (B_X - A_X) * x + A_Y >= y:
         return False
-    if (D_Y - C_Y)/(D_X - C_X) * x + C_Y <= y:
+    if (D_Y - C_Y) / (D_X - C_X) * x + C_Y <= y:
         return False
-    if -0.00239*y*y + 1.62919*y - 235 >= x:
+    if -0.00239 * y * y + 1.62919 * y - 235 >= x:
         return False
-    if -0.00091*y*y + 0.61765*y + 300 <= x:
+    if -0.00091 * y * y + 0.61765 * y + 300 <= x:
         return False
     return True
 
 
-def proba(img, colorStep):
-    probaValue = [0 for _ in range(0, 254, colorStep)]
+def proba(img, color_step):
+    probaValue = [0 for _ in range(0, 254, color_step)]
     for x in range(img.shape[0]):
         for y in range(img.shape[1]):
-            if isInside(x, y):
-                probaValue[int(img[x, y][0]/colorStep)] += 1
+            if is_inside(x, y):
+                probaValue[int(img[x, y][0] / color_step)] += 1
     for x in range(len(probaValue)):
-        probaValue[x] = probaValue[x]/(img.shape[0] * img.shape[1])
+        probaValue[x] = probaValue[x] / (img.shape[0] * img.shape[1])
     return probaValue
 
 
-def entropia(img, colorStep):
-    entropiaValue = 0
-    probaValue = proba(img, colorStep)
+def entropia(img, color_step):
+    entropia_value = 0
+    probaValue = proba(img, color_step)
     for v in range(len(probaValue)):
         if probaValue[v] != 0:
-            entropiaValue += probaValue[v] * np.log(1/probaValue[v])
-    return entropiaValue
+            entropia_value += probaValue[v] * np.log(1 / probaValue[v])
+    return entropia_value
 
 
-def imgCut(img, nbCut):
+def cut_image(img, nb_cut):
     listImage = []
     x, y = 0, 0
-    cutImageSizeX = int(img.shape[0]/nbCut)
-    cutImageSizeY = int(img.shape[1]/nbCut)
-    #print(cutImageSizeY, cutImageSizeX)
-    for i in range(1, nbCut + 1):
-        for j in range(1, nbCut + 1):
+    cutImageSizeX = int(img.shape[0] / nb_cut)
+    cutImageSizeY = int(img.shape[1] / nb_cut)
+    # print(cutImageSizeY, cutImageSizeX)
+    for i in range(1, nb_cut + 1):
+        for j in range(1, nb_cut + 1):
             print(x, (i * cutImageSizeX), y, (j * cutImageSizeY))
             listImage.append(img[x: (i * cutImageSizeX), y:(j * cutImageSizeY)])
 
@@ -67,20 +82,18 @@ def imgCut(img, nbCut):
     return listImage
 
 
-
-
 image = cv2.imread(ressources_path + "2019010A.jpg")
 
 for i in range(0, image.shape[0]):
     for j in range(0, image.shape[1]):
-        if isInside(i, j) == False:
+        if not is_inside(i, j):
             image[i, j] = [100, 0, 0]
 
 print(entropia(image, 1))
 
-imagette = imgCut(image, 4)
+imagette = cut_image(image, 4)
 
-#cv2.imshow("wow", image)
+# cv2.imshow("wow", image)
 for i in range(len(imagette)):
     cv2.imshow(str(i), imagette[i])
 cv2.waitKey(0)
