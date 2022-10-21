@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-ressources_path = "ressources/"
+RESSOURCES_PATH = "ressources/"
 
 STEP = 20
 
@@ -34,19 +34,29 @@ def is_inside(x, y):
     bool
         True if the point is inside the echographie shape, False otherwise
     """
+
+    # Left side
     if (B_Y - A_Y) / (B_X - A_X) * x + A_Y >= y:
         return False
+
+    # Right side
     if (D_Y - C_Y) / (D_X - C_X) * x + C_Y <= y:
         return False
+
+    # Top side
     if -0.00239 * y * y + 1.62919 * y - 235 >= x:
         return False
+
+    # Bottom side
     if -0.00091 * y * y + 0.61765 * y + 300 <= x:
         return False
+
     return True
 
 
 def proba(img, color_step):
     proba_value = [0 for _ in range(0, 254, color_step)]
+    print(proba_value)
     for x in range(img.shape[0]):
         for y in range(img.shape[1]):
             if is_inside(x, y):
@@ -85,14 +95,17 @@ def cut_image(img, nb_cut):
     return image_list
 
 
-image = cv2.imread(ressources_path + "2019010A.jpg")
+# --------- Main ---------
+
+image = cv2.imread(RESSOURCES_PATH + "2019010A.jpg")
 
 for i in range(0, image.shape[0]):
     for j in range(0, image.shape[1]):
         if not is_inside(i, j):
             image[i, j] = [100, 0, 0]
 
-print(entropia(image, 1))
+
+print(entropia(image, 10))
 
 imagette = cut_image(image, 4)
 
