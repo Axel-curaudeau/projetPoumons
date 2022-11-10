@@ -46,6 +46,17 @@ def read_patient_list_file(patient_file_path):
         result[-1].pop(-1)
     return result
 
+
+def write_patient_list_file(patient_file_path, patient_list):
+    patient_file = open(patient_file_path + "2", "w")
+    for i in patient_list:
+        for j in i:
+            patient_file.write(str(j))
+            patient_file.write(";")
+        patient_file.write("\n")
+    patient_file.close()
+
+
 def get_echo_path(patient):
     num_patient = patient[0][len(patient[0]) - 2:]
     path = ""
@@ -63,13 +74,11 @@ def get_echo_path(patient):
 # --------- Main ---------
 
 # entropy_test()
-patients_list = read_patient_list_file("ressources/Patients/PatientsList.txt")
-for patient in patients_list:
-    path = get_echo_path(patient)
-    print(path, os.path.exists("ressources/Patients/" + path))
+patients_list = read_patient_list_file("ressources/Patients/PatientsList2.txt")
 
-X = [i for i in range(len(patients_list))]
-Y = [patient[4] for patient in patients_list]
+Y = [int(patient[4]) for patient in patients_list]
+X = [patient[-1] for patient in patients_list]
 
-plt.scatter(X, Y)
+print(X)
+plt.scatter(Y, X)
 plt.show()
