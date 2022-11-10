@@ -50,5 +50,9 @@ class Image:
                     echo_temp.array[i, j] = [255, 255, 255]
         return echo_temp
 
+    def addRectangle(self, x, y, w, h, color):
+        cv2.rectangle(self.array, (x, y), (x + w, y + h), color, 2)
+        return self
+
     def copy(self):
         return Image(self.path)
