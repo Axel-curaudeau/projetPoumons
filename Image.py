@@ -54,6 +54,19 @@ class Image:
                     echo_temp.array[i, j] = [255, 255, 255]
         return echo_temp
 
+    def smoothfilter(self,nb):
+        for i in range(nb):
+            img_temp = self.array.copy()
+            for x in range(1,self.width-1):
+                for y in range(1,self.height-1):
+                    sum = int(self.array[y-1,x-1][0]) + int(self.array[y-1,x][0]) + int(self.array[y-1,x+1][0]) + int(self.array[y,x-1][0]) + int(self.array[y,x][0]) + int(self.array[y,x+1][0]) + int(self.array[y+1,x-1][0]) + int(self.array[y+1,x][0]) + int(self.array[y+1,x+1][0])
+                    if sum < 1100 :
+                        img_temp[y,x] = [0,0,0]
+                    else:
+                        img_temp[y,x] = [255,255,255]
+            self.array = img_temp
+        return self
+
     def addRectangle(self, x, y, w, h, color):
         cv2.rectangle(self.array, (x, y), (x + w, y + h), color, 2)
         return self
