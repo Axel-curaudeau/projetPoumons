@@ -1,21 +1,21 @@
 import numpy as np
 
-import Echographie as echo
+import Image
 import cv2
 
-echo1 = echo.read("ressources/2019010A.jpg")
+img1 = Image.read("ressources/2019010A.jpg")
 
-print(echo1)
-print(echo1.imgPath)
-print(echo1.width)
-print(echo1.height)
+print(img1)
+print(img1.path)
+print(img1.width)
+print(img1.height)
 
-img = echo1.filter(30)
-cv2.imshow("wow", img)
-echo1.show_with_grid(30)
-cv2.imshow("wow2", echo1.img)
-img2 = echo1.get_subimage(210, 180, 180, 120)
-cv2.imshow("wow3", img2)
+img2 = img1.filter(30)
+cv2.imshow("filter", img2.array)
+img1.show_with_grid(30)
+cv2.imshow("de base", img1.array)
+img3 = img1.get_subimage(210, 180, 180, 120)
+cv2.imshow("sub image", img3.array)
 cv2.waitKey(0)
 
 

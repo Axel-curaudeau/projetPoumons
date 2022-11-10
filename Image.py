@@ -1,38 +1,37 @@
 import cv2
 
 def read(path):
-    echo = Echographie(path)
+    echo = Image(path)
     return echo
 
 def echo_from_img(img):
-    echo = Echographie(img)
+    echo = Image(img)
     return echo
 
-class Echographie:
+class Image:
     nom = None
-    ligne_pleurale_irreguliere = None
-    nb_ligne_B = None
-    epaississement_ligne_pleurale = None
-    imgPath = None
-    img = None
+    path = None
+    array = None
     width = None
     height = None
 
     def __init__(self, imgPath):
-        self.imgPath = imgPath
-        self.img = cv2.imread(imgPath)
+        self.path = imgPath
+        self.array = cv2.imread(imgPath)
         self.nom = imgPath.split("/")[-1].split(".")[0]
-        self.width = self.img.shape[1]
-        self.height = self.img.shape[0]
+        self.width = self.array.shape[1]
+        self.height = self.array.shape[0]
 
     def __str__(self):
         return self.nom
 
     def get_subimage(self, x, y, w, h):
-        return self.img[int(y):int(y+h), int(x):int(x+w)]
+        new_image = self.copy()
+        new_image.array = new_image.array[int(y):int(y + h), int(x):int(x + w)]
+        return new_image
 
     def show_with_grid(self, step):
-        img_temp = self.img.copy()
+        img_temp = self.array.copy()
         for i in range(0, self.height, step):
             for j in range(0, self.width,):
                 img_temp[i, j] = [0, 0, 255]
@@ -40,14 +39,16 @@ class Echographie:
             for j in range(0, self.height):
                 img_temp[j, i] = [0, 0, 255]
         cv2.imshow("grid", img_temp)
-        cv2.waitKey(0)
 
     def filter(self, level):
-        img_temp = self.img.copy()
+        echo_temp = self.copy()
         for i in range(0, self.height):
             for j in range(0, self.width):
-                if img_temp[i, j][0] < level:
-                    img_temp[i, j] = [0, 0, 0]
+                if echo_temp.array[i, j][0] < level:
+                    echo_temp.array[i, j] = [0, 0, 0]
                 else:
-                    img_temp[i, j] = [255, 255, 255]
-        return img_temp
+                    echo_temp.array[i, j] = [255, 255, 255]
+        return echo_temp
+
+    def copy(self):
+        return Image(self.path)

@@ -1,8 +1,12 @@
+import os.path
 import cv2
+from matplotlib import pyplot as plt
 
-from Analyzer import Analyzer
+import Analyzer
+#import matplotlib.pyplot as plt
 
 RESSOURCES_PATH = "ressources/"
+
 
 def cut_image(img, nb_cut):
     image_list = []
@@ -22,36 +26,50 @@ def cut_image(img, nb_cut):
         y = 0
     return image_list
 
+
 def entropy_test():
     fichier = open("entropyList-1.txt", "w")
     for i in range(322):
-        image = cv2.imread(RESSOURCES_PATH + "poumons2/" + str(i) + ".jpg")
-        analyze = Analyzer(image)
+        image1 = cv2.imread(RESSOURCES_PATH + "poumons2/" + str(i) + ".jpg")
+        analyze = Analyzer.Analyzer(image1)
         fichier.write(str(analyze.entropy(1)) + "\n")
         print(i)
 
+
+def read_patient_list_file(patient_file_path):
+    patient_file = open(patient_file_path, "r")
+    patient_list = patient_file.readlines()
+    patient_file.close()
+    result = []
+    for line in patient_list:
+        result.append(line.split(";"))
+        result[-1].pop(-1)
+    return result
+
+def get_echo_path(patient):
+    num_patient = patient[0][len(patient[0]) - 2:]
+    path = ""
+    if int(num_patient) <= 8:
+        path = "0"
+    path += patient[0] + "/"
+    if int(num_patient) <= 10:
+        path += "1"
+    else:
+        path += "10"
+    path += num_patient + patient[1] + "/" + patient[2] + ".jpg"
+    return path
+
+
 # --------- Main ---------
 
-image = cv2.imread(RESSOURCES_PATH + "2019010A.jpg")
+# entropy_test()
+patients_list = read_patient_list_file("ressources/Patients/PatientsList.txt")
+for patient in patients_list:
+    path = get_echo_path(patient)
+    print(path, os.path.exists("ressources/Patients/" + path))
 
+X = [i for i in range(len(patients_list))]
+Y = [patient[4] for patient in patients_list]
 
-ImageAnalyzer = Analyzer(image)
-
-
-for i in range(0, image.shape[0]):
-    for j in range(0, image.shape[1]):
-        if not ImageAnalyzer.is_inside(i, j):
-            image[i, j] = [100, 0, 0]
-
-
-print(ImageAnalyzer.entropy(10))
-
-#entropy_test()
-
-'''
-imagette = cut_image(image, 2)
-
-# cv2.imshow("wow", image)
-for i in range(len(imagette)):
-    cv2.imshow(str(i), imagette[i])
-cv2.waitKey(0)'''
+plt.scatter(X, Y)
+plt.show()
