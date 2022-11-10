@@ -8,6 +8,10 @@ def echo_from_img(img):
     echo = Image(img)
     return echo
 
+def wait_and_close():
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
 class Image:
     nom = None
     path = None
@@ -54,5 +58,12 @@ class Image:
         cv2.rectangle(self.array, (x, y), (x + w, y + h), color, 2)
         return self
 
+    def addLine(self, x1, y1, x2, y2, color):
+        cv2.line(self.array, (x1, y1), (x2, y2), color, 2)
+        return self
+
     def copy(self):
         return Image(self.path)
+
+    def show(self, name):
+        cv2.imshow(name, self.array)

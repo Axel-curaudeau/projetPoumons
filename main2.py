@@ -5,27 +5,29 @@ import Image
 import cv2
 import Entropy
 
-img = Image.read("ressources/2019010A.jpg")
+img = Image.read("ressources/poumons/182.jpg")
 
-img1 = img.get_subimage(233, 185, 135, 75)
-img2 = img.get_subimage(260, 187, 82, 71)
-img3 = img.get_subimage(275, 150, 51, 106)
+img_filtered_30 = img.filter(25)
 
-img.addRectangle(233, 185, 135, 75, (0, 0, 255))
-img.addRectangle(260, 187, 82, 71, (0, 255, 0))
-img.addRectangle(275, 150, 51, 106, (255, 0, 0))
+intersection = []
 
-an1 = Analyzer.Analyzer(img1.array)
-an2 = Analyzer.Analyzer(img2.array)
-an3 = Analyzer.Analyzer(img3.array)
+for i in range(50, img_filtered_30.width - 50):
+    if img_filtered_30.array[300,i][0] == 255 and img_filtered_30.array[300,i-1][0] == 0:
+        intersection.append((i,i+1,"NB"))
+    elif img_filtered_30.array[300,i][0] == 0 and img_filtered_30.array[300,i-1][0] == 255:
+        intersection.append((i,i+1,"BN"))
 
-print("Entropy Rouge : ", Entropy.compute_entropy(img1.array))
-print("Entropy Vert : ", Entropy.compute_entropy(img2.array))
-print("Entropy Bleu : ", Entropy.compute_entropy(img3.array))
+for i in intersection:
+    img_filtered_30.addLine(i[0], 298, i[0]+1, 298, (0, 0, 255))
 
-cv2.imshow("img", img.array)
+for i in range(1, len(intersection)):
+    if intersection[i][2] == "BN" and intersection[i-1][2] == "NB":
+        xl = intersection[i-1][0]
+        xr = intersection[i][0]
 
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+img.addRectangle(xl, 300, xr-xl, -100, (0, 0, 255))
 
+img_filtered_30.show("img_filtered_30")
+img.show("img")
 
+Image.wait_and_close()
