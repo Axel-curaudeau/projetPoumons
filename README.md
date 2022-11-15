@@ -14,3 +14,6 @@
 # Génie log
 - Cahier des charges
 - Diagramme UML
+
+# idée pour le smooth
+réduire la taille de l'image et trouver le rectangle, puis convertir ses coordonnées dans l'image originale

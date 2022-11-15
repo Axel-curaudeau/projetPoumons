@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 
 
 def read(path):
@@ -25,7 +26,7 @@ class Image:
 
     def __init__(self, img_path):
         self.path = img_path
-        self.array = cv2.imread(img_path)
+        self.array = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
         self.nom = img_path.split("/")[-1].split(".")[0]
         self.width = self.array.shape[1]
         self.height = self.array.shape[0]
@@ -71,6 +72,19 @@ class Image:
                         img_temp[y, x] = [0, 0, 0]
                     else:
                         img_temp[y, x] = [255, 255, 255]
+            self.array = img_temp
+        return self
+
+    def smoothfilter_nump(self,nb):
+        for i in range(nb):
+            img_temp = self.array.copy()
+            for x in range(1,self.width-1):
+                for y in range(1,self.height-1):
+                    sum = np.cumsum(self.array[y-1:y+2,x-1:x+2,0])
+                    if sum < 1100 :
+                        img_temp[y,x] = [0,0,0]
+                    else:
+                        img_temp[y,x] = [255,255,255]
             self.array = img_temp
         return self
 

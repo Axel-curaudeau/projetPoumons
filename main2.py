@@ -1,3 +1,5 @@
+import time
+
 import numpy as np
 
 import Analyzer
@@ -5,21 +7,25 @@ import Image
 import cv2
 import Entropy
 
-img = Image.read("ressources/poumons/182.jpg")
+img1 = Image.read("ressources/poumons/182.jpg")
 
-gray = cv2.cvtColor(img.array, cv2.COLOR_BGR2GRAY)
+img1 = img1.filter(25)
+img2 = img1.copy()
 
-for i in range(1, 500, 10):
-    for j in range(1, 500, 10):
-        edged = cv2.Canny(gray, i, j)
-        cv2.imshow("edged", edged)
-        cv2.waitKey(0)
+time1 = time.process_time()
+img1.smoothfilter(1)
+time2 = time.process_time()
+img2.smoothfilter_nump(1)
+time3 = time.process_time()
 
+print("time1 : ", time2 - time1)
+print("time2 : ", time3 - time2)
 
+img1.show("img1")
+img2.show("img2")
 
-
+"""
 img_filtered_30 = img.filter(25)
-
 
 intersection = []
 
@@ -38,7 +44,6 @@ for i in range(1, len(intersection)):
         xr = intersection[i][0]
 
 img.addRectangle(xl, 300, xr - xl, -100, (0, 0, 255))
-
-# img.show("img")
+"""
 
 Image.wait_and_close()
