@@ -53,10 +53,10 @@ class Image:
         echo_temp = self.copy()
         for i in range(0, self.height):
             for j in range(0, self.width):
-                if echo_temp.array[i, j][0] < level:
-                    echo_temp.array[i, j] = [0, 0, 0]
+                if echo_temp.array[i, j] < level:
+                    echo_temp.array[i, j] = 0
                 else:
-                    echo_temp.array[i, j] = [255, 255, 255]
+                    echo_temp.array[i, j] = 255
         return echo_temp
 
     def smoothfilter(self, nb):
@@ -64,14 +64,14 @@ class Image:
             img_temp = self.array.copy()
             for x in range(1, self.width - 1):
                 for y in range(1, self.height - 1):
-                    sum = int(self.array[y - 1, x - 1][0]) + int(self.array[y - 1, x][0]) + int(
-                        self.array[y - 1, x + 1][0]) + int(self.array[y, x - 1][0]) + int(self.array[y, x][0]) + int(
-                        self.array[y, x + 1][0]) + int(self.array[y + 1, x - 1][0]) + int(
-                        self.array[y + 1, x][0]) + int(self.array[y + 1, x + 1][0])
+                    sum = int(self.array[y - 1, x - 1]) + int(self.array[y - 1, x]) + int(
+                        self.array[y - 1, x + 1]) + int(self.array[y, x - 1]) + int(self.array[y, x]) + int(
+                        self.array[y, x + 1]) + int(self.array[y + 1, x - 1]) + int(
+                        self.array[y + 1, x]) + int(self.array[y + 1, x + 1])
                     if sum < 1100:
-                        img_temp[y, x] = [0, 0, 0]
+                        img_temp[y, x] = 0
                     else:
-                        img_temp[y, x] = [255, 255, 255]
+                        img_temp[y, x] = 255
             self.array = img_temp
         return self
 
@@ -80,11 +80,11 @@ class Image:
             img_temp = self.array.copy()
             for x in range(1,self.width-1):
                 for y in range(1,self.height-1):
-                    sum = np.cumsum(self.array[y-1:y+2,x-1:x+2,0])
+                    sum = np.sum(self.array[y-1:y+2,x-1:x+2])
                     if sum < 1100 :
-                        img_temp[y,x] = [0,0,0]
+                        img_temp[y,x] = 0
                     else:
-                        img_temp[y,x] = [255,255,255]
+                        img_temp[y,x] = 255
             self.array = img_temp
         return self
 
