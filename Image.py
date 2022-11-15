@@ -1,16 +1,20 @@
 import cv2
 
+
 def read(path):
     echo = Image(path)
     return echo
+
 
 def echo_from_img(img):
     echo = Image(img)
     return echo
 
+
 def wait_and_close():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
 
 class Image:
     nom = None
@@ -19,10 +23,10 @@ class Image:
     width = None
     height = None
 
-    def __init__(self, imgPath):
-        self.path = imgPath
-        self.array = cv2.imread(imgPath)
-        self.nom = imgPath.split("/")[-1].split(".")[0]
+    def __init__(self, img_path):
+        self.path = img_path
+        self.array = cv2.imread(img_path)
+        self.nom = img_path.split("/")[-1].split(".")[0]
         self.width = self.array.shape[1]
         self.height = self.array.shape[0]
 
@@ -37,7 +41,7 @@ class Image:
     def show_with_grid(self, step):
         img_temp = self.array.copy()
         for i in range(0, self.height, step):
-            for j in range(0, self.width,):
+            for j in range(0, self.width, ):
                 img_temp[i, j] = [0, 0, 255]
         for i in range(0, self.width, step):
             for j in range(0, self.height):
@@ -54,16 +58,19 @@ class Image:
                     echo_temp.array[i, j] = [255, 255, 255]
         return echo_temp
 
-    def smoothfilter(self,nb):
+    def smoothfilter(self, nb):
         for i in range(nb):
             img_temp = self.array.copy()
-            for x in range(1,self.width-1):
-                for y in range(1,self.height-1):
-                    sum = int(self.array[y-1,x-1][0]) + int(self.array[y-1,x][0]) + int(self.array[y-1,x+1][0]) + int(self.array[y,x-1][0]) + int(self.array[y,x][0]) + int(self.array[y,x+1][0]) + int(self.array[y+1,x-1][0]) + int(self.array[y+1,x][0]) + int(self.array[y+1,x+1][0])
-                    if sum < 1100 :
-                        img_temp[y,x] = [0,0,0]
+            for x in range(1, self.width - 1):
+                for y in range(1, self.height - 1):
+                    sum = int(self.array[y - 1, x - 1][0]) + int(self.array[y - 1, x][0]) + int(
+                        self.array[y - 1, x + 1][0]) + int(self.array[y, x - 1][0]) + int(self.array[y, x][0]) + int(
+                        self.array[y, x + 1][0]) + int(self.array[y + 1, x - 1][0]) + int(
+                        self.array[y + 1, x][0]) + int(self.array[y + 1, x + 1][0])
+                    if sum < 1100:
+                        img_temp[y, x] = [0, 0, 0]
                     else:
-                        img_temp[y,x] = [255,255,255]
+                        img_temp[y, x] = [255, 255, 255]
             self.array = img_temp
         return self
 
@@ -76,7 +83,12 @@ class Image:
         return self
 
     def copy(self):
-        return Image(self.path)
+        img_temp = Image(self.path)
+        img_temp.array = self.array.copy()
+        img_temp.width = self.width
+        img_temp.height = self.height
+        img_temp.nom = self.nom
+        return img_temp
 
     def show(self, name):
         cv2.imshow(name, self.array)

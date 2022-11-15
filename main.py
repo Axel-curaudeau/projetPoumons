@@ -3,7 +3,7 @@ import cv2
 from matplotlib import pyplot as plt
 
 import Analyzer
-#import matplotlib.pyplot as plt
+import Image
 
 RESSOURCES_PATH = "ressources/"
 
@@ -36,44 +36,10 @@ def entropy_test():
         print(i)
 
 
-def read_patient_list_file(patient_file_path):
-    patient_file = open(patient_file_path, "r")
-    patient_list = patient_file.readlines()
-    patient_file.close()
-    result = []
-    for line in patient_list:
-        result.append(line.split(";"))
-        result[-1].pop(-1)
-    return result
-
-
-def write_patient_list_file(patient_file_path, patient_list):
-    patient_file = open(patient_file_path + "2", "w")
-    for i in patient_list:
-        for j in i:
-            patient_file.write(str(j))
-            patient_file.write(";")
-        patient_file.write("\n")
-    patient_file.close()
-
-
-def get_echo_path(patient):
-    num_patient = patient[0][len(patient[0]) - 2:]
-    path = ""
-    if int(num_patient) <= 8:
-        path = "0"
-    path += patient[0] + "/"
-    if int(num_patient) <= 10:
-        path += "1"
-    else:
-        path += "10"
-    path += num_patient + patient[1] + "/" + patient[2] + ".jpg"
-    return path
-
-
 # --------- Main ---------
 
 # entropy_test()
+'''
 patients_list = read_patient_list_file("ressources/Patients/PatientsList2.txt")
 
 Y = [int(patient[4]) for patient in patients_list]
@@ -82,3 +48,12 @@ X = [patient[-1] for patient in patients_list]
 print(X)
 plt.scatter(Y, X)
 plt.show()
+'''
+
+img = Image.read("ressources/2019010A.jpg")
+img.show("base")
+for i in range(1, 10):
+    smoothImg = img.smoothfilter(i)
+    smoothImg.show("smooth" + str(i))
+
+Image.wait_and_close()
