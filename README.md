@@ -1,12 +1,12 @@
 # Travail à faire
-- Réoganiser le projet (avec des classes/modules)
+- [x] Réoganiser le projet (avec des classes/modules)
 - Tester si la valeur de l'entropie peut vraiment compter les lignes B ? 
   Comment ? en ne gardant que le centre et la partie interesssante ?
 
 # Programmation
 - Fonction ou méthode pour enlever les ombres des côtes
-    - Fonction contraste noir et blanc
-    - Recherche des 2 zones
+    - [x] Fonction contraste noir et blanc
+    - [x] Recherche des 2 zones
     - Recherche du pixel le plus à gauche dans l'ombre de droite et inversement
     - Jusqu'où aller en haut et en bas ?
 - Tests unitaires
@@ -17,3 +17,12 @@
 
 # idée pour le smooth
 réduire la taille de l'image et trouver le rectangle, puis convertir ses coordonnées dans l'image originale
+
+
+# déroulement du projet
+- calcul de l'entropie sur les images entière.
+  - Génération d'un graph afin de mettre en évidence un lien entre entropie et nombre de lignes B.
+
+- rognage de l'image pour ne garder que la partie significative pour les lignes B
+  - traitement afin de décider automatiquement quelle partie de l'image on garde
+  - optimisation du traitement "smooth" car trop lent.
