@@ -1,23 +1,20 @@
 import cv2
 import Entropy
+import EchoTools
 from matplotlib import pyplot as plt
 
-img = cv2.imread("ressources/poumons/171.jpg", cv2.IMREAD_GRAYSCALE)
+img = cv2.imread("ressources/Patients/03Patient 1DR03/103M0/2019010A.jpg", cv2.IMREAD_GRAYSCALE)
 
-def slide_entropy(img, slide_width):
-    list_entropy = []
-    for x in range(0, img.shape[1]-slide_width):
-        list_entropy.append(Entropy.compute_entropy(img[:,x:x + slide_width]))
-    return list_entropy
+subimg = EchoTools.sub_image(img)
+list_e_vert = EchoTools.slide_entropy(subimg, 20, "vertical")
+list_e_hor = EchoTools.slide_entropy(subimg, 20, "horizontal")
 
-elist = slide_entropy(img, 10)
-print(elist)
-x_list = [i for i in range(len(elist))]
-plt.plot(x_list, elist)
+plt.plot(list_e_vert)
+plt.plot(list_e_hor)
 plt.show()
 
 cv2.imshow("img", img)
-
+cv2.imshow("subimg", subimg)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
