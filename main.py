@@ -1,59 +1,45 @@
-import os.path
 import cv2
-from matplotlib import pyplot as plt
+import numpy as np
+import time
 
-import Analyzer
-import Image
+def smooth(image, filter, kernel_size):
+    image_filter = cv2.threshold(image, filter, 255, cv2.THRESH_BINARY)[1]
+    kernel = np.ones((kernel_size, kernel_size), np.uint8)
+    image_open = cv2.morphologyEx(image_filter, cv2.MORPH_OPEN, kernel)
+    image_open_close = cv2.morphologyEx(image_open, cv2.MORPH_CLOSE, kernel)
+    return image_open_close
 
-RESSOURCES_PATH = "ressources/"
+def sub_image(image):
+    intersection = []
+    image_filtered = smooth(image, 30, 7)
+    width = len(image_filtered[0])
+    height = len(image_filtered)
+
+    for i in range(50, width - 50):
+        if image_filtered[300, i] == 255 and image_filtered[300, i - 1] == 0:
+            intersection.append((i, i + 1, "NB"))
+        elif image_filtered[300, i] == 0 and image_filtered[300, i - 1] == 255:
+            intersection.append((i, i + 1, "BN"))
+
+    for i in intersection:
+        cv2.line(image_filtered, (i[0], 298), (i[0] + 10, 298), 160, 2)
+        # image_filtered.addLine(i[0], 298, i[0] + 1, 298, (0, 0, 255))
+
+    for i in range(1, len(intersection)):
+        if intersection[i][2] == "BN" and intersection[i - 1][2] == "NB":
+            xl = intersection[i - 1][0]
+            xr = intersection[i][0]
+
+    cv2.rectangle(image, (xl, 300), (xr, 200), 155, 2)
+    # image.addRectangle(xl, 300, xr - xl, -100, (0, 0, 255))
+
+    cv2.imshow("filter", image_filtered)
 
 
-def cut_image(img, nb_cut):
-    image_list = []
-    x = 0
-    y = 0
-    cutted_image_width = int(img.shape[0] / nb_cut)
-    cutted_image_height = int(img.shape[1] / nb_cut)
-    # print(cutted_image_height, cutted_image_width)
-    for i in range(1, nb_cut + 1):
-        for j in range(1, nb_cut + 1):
-            print(x, (i * cutted_image_width), y, (j * cutted_image_height))
-            image_list.append(img[x: (i * cutted_image_width),
-                                  y: (j * cutted_image_height)])
+path = "./ressources/Patients/01Patient 1CP01/101M0/2019010A.jpg"
 
-            y = j * cutted_image_height
-        x = i * cutted_image_width
-        y = 0
-    return image_list
+image = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
 
-
-def entropy_test():
-    fichier = open("entropyList-1.txt", "w")
-    for i in range(322):
-        image1 = cv2.imread(RESSOURCES_PATH + "poumons2/" + str(i) + ".jpg")
-        analyze = Analyzer.Analyzer(image1)
-        fichier.write(str(analyze.entropy(1)) + "\n")
-        print(i)
-
-
-# --------- Main ---------
-
-# entropy_test()
-'''
-patients_list = read_patient_list_file("ressources/Patients/PatientsList2.txt")
-
-Y = [int(patient[4]) for patient in patients_list]
-X = [patient[-1] for patient in patients_list]
-
-print(X)
-plt.scatter(Y, X)
-plt.show()
-'''
-
-img = Image.read("ressources/2019010A.jpg")
-img.show("base")
-for i in range(1, 10):
-    smoothImg = img.smoothfilter(i)
-    smoothImg.show("smooth" + str(i))
-
-Image.wait_and_close()
+sub_image(image)
+cv2.imshow("image", image)
+cv2.waitKey(0)

@@ -17,8 +17,11 @@ time2 = time.process_time()
 img2.smoothfilter_nump(1)
 time3 = time.process_time()
 
+
 print("time1 : ", time2 - time1)
 print("time2 : ", time3 - time2)
+time4 = time.process_time()
+print("time3 : ", time4 - time3)
 
 img1.show("img1")
 img2.show("img2")

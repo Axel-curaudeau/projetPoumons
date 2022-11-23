@@ -1,4 +1,7 @@
 import csv
+import cv2
+import Analyzer
+from matplotlib import pyplot as plt
 
 RESSOURCES_PATH = "ressources/"
 
@@ -63,3 +66,22 @@ def get_echo_path(patient):
         path += "10"
     path += num_patient + patient[1] + "/" + patient[2] + ".jpg"
     return path
+
+
+def entropy_on_all_image():
+    fichier = open("entropyList-1.txt", "w")
+    for i in range(322):
+        image1 = cv2.imread(RESSOURCES_PATH + "poumons2/" + str(i) + ".jpg")
+        analyze = Analyzer.Analyzer(image1)
+        fichier.write(str(analyze.entropy(1)) + "\n")
+        print(i)
+
+def graph_entropy_all_image():
+    patients_list = read_patient_list_file("ressources/Patients/PatientsList2.txt")
+
+    Y = [int(patient[4]) for patient in patients_list]
+    X = [patient[-1] for patient in patients_list]
+
+    print(X)
+    plt.scatter(Y, X)
+    plt.show()
