@@ -1,7 +1,6 @@
 import time
 
 import numpy as np
-
 import Analyzer
 import Image
 import cv2
