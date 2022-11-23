@@ -8,6 +8,5 @@ def compute_entropy(img):
     # Compute the entropy
     hist = hist[hist != 0]
     hist = hist / hist.sum()
-    print(hist)
     entropy = -np.sum(hist * np.log2(hist))
     return entropy
