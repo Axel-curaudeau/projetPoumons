@@ -85,3 +85,67 @@ def graph_entropy_all_image():
     print(X)
     plt.scatter(Y, X)
     plt.show()
+
+def min_color(image):
+    min_color = 255
+    for i in range(image.shape[0]):
+        for j in range(image.shape[1]):
+            if image[i][j] < min_color:
+                min_color = image[i][j]
+    return min_color
+
+def test_subimage_func(func, folder, folder_size, ratio_max = 3, color_min = 0, show_image=False):
+    nb_error = 0
+    error = False
+
+    for i in range(folder_size):
+        image = cv2.imread(folder + "/" + str(i) + ".jpg", cv2.IMREAD_GRAYSCALE)
+        subimg = func(image)
+
+        if subimg is None:
+            error = True
+        elif subimg.shape[0] == 0 or subimg.shape[1] == 0:
+            error = True
+        elif subimg.shape[0] > image.shape[0] or subimg.shape[1] > image.shape[1]:
+            error = True
+        elif subimg.shape[0] < 0 or subimg.shape[1] < 0:
+            error = True
+        elif subimg.shape[0] == image.shape[0] and subimg.shape[1] == image.shape[1]:
+            error = True
+        elif subimg.shape[0] > (subimg.shape[1] * ratio_max) or subimg.shape[1] > (subimg.shape[0] * ratio_max):
+            error = True
+        elif min_color(subimg) < color_min:
+            error = True
+        else:
+            error = False
+
+        if error:
+            nb_error += 1
+            error = False
+            print("Error on image " + str(i))
+            if show_image:
+                cv2.imshow("image", image)
+                cv2.imshow("subimg", subimg)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
+
+    percent_correct = round((folder_size - nb_error) / folder_size * 100,1)
+
+    print("===============================================================")
+    for i in range(0, int(percent_correct / 2) + 2):
+        print(" ", end="")
+    print(str(percent_correct) + " % ")
+    print("0%  |", end="")
+    for i in range(0, int(percent_correct / 2)):
+        print("█", end="")
+    if percent_correct % 2 == 1:
+        print("▌", end="")
+    for i in range(int(percent_correct / 2), 50):
+        print("-", end="")
+    print("|  100 %")
+    print("===============================================================")
+    print("Number of error: " + str(nb_error))
+    print("Number of image: " + str(folder_size))
+    print("Percentage of error: " + str(nb_error / folder_size * 100) + "%")
+    print("===============================================================")
+

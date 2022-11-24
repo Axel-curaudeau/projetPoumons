@@ -26,6 +26,8 @@ def sub_image(image):
         cv2.line(image_filtered, (i[0], 298), (i[0] + 10, 298), 160, 2)
         # image_filtered.addLine(i[0], 298, i[0] + 1, 298, (0, 0, 255))
 
+    xl = 0
+    xr = 1
     for i in range(1, len(intersection)):
         if intersection[i][2] == "BN" and intersection[i - 1][2] == "NB":
             xl = intersection[i - 1][0]
