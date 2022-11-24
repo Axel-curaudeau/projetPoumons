@@ -131,21 +131,44 @@ def test_subimage_func(func, folder, folder_size, ratio_max = 3, color_min = 0, 
 
     percent_correct = round((folder_size - nb_error) / folder_size * 100,1)
 
-    print("===============================================================")
-    for i in range(0, int(percent_correct / 2) + 2):
+    line_size = 66
+    print("╔══════════════════════ Correct Image Rate ══════════════════════╗")
+
+    print("║    ", end="")
+    for i in range(0, int(percent_correct / 2.1) + 2):
         print(" ", end="")
-    print(str(percent_correct) + " % ")
-    print("0%  |", end="")
+    print(str(percent_correct) + " % ", end="")
+    for i in range(int(percent_correct / 2.1) + len(str(percent_correct)+ " %"), line_size-9):
+        print(" ", end="")
+    print("║")
+
+    nb_char = 0
+    print("║ 0 % |", end="")
+    nb_char += 7
     for i in range(0, int(percent_correct / 2)):
         print("█", end="")
+        nb_char += 1
     if percent_correct % 2 == 1:
         print("▌", end="")
-    for i in range(int(percent_correct / 2), 50):
+        nb_char += 1
+    for i in range(nb_char, 57):
         print("-", end="")
-    print("|  100 %")
-    print("===============================================================")
-    print("Number of error: " + str(nb_error))
-    print("Number of image: " + str(folder_size))
-    print("Percentage of error: " + str(nb_error / folder_size * 100) + "%")
-    print("===============================================================")
+    if percent_correct % 2 == 0 and percent_correct != 100:
+        print("-", end="")
+    print("| 100 % ║")
+
+    print("╠════════════════════════════════════════════════════════════════╣")
+    print("║ Number of error: " + str(nb_error), end="")
+    for i in range(0, line_size - 20 - len(str(nb_error))):
+        print(" ", end="")
+    print("║")
+    print("║ Number of image: " + str(folder_size), end="")
+    for i in range(0, line_size - 20 - len(str(folder_size))):
+        print(" ", end="")
+    print("║")
+    print("║ Percentage of error: " + str(round(nb_error / folder_size * 100,1)) + "%", end="")
+    for i in range(0, line_size - 25 - len(str(round(nb_error / folder_size * 100,1)))):
+        print(" ", end="")
+    print("║")
+    print("╚════════════════════════════════════════════════════════════════╝")
 
