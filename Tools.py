@@ -1,7 +1,6 @@
 import csv
 import cv2
 import Analyzer
-from matplotlib import pyplot as plt
 
 RESSOURCES_PATH = "ressources/"
 
@@ -68,37 +67,18 @@ def get_echo_path(patient):
     return path
 
 
-def entropy_on_all_image():
-    fichier = open("entropyList-1.txt", "w")
-    for i in range(322):
-        image1 = cv2.imread(RESSOURCES_PATH + "poumons2/" + str(i) + ".jpg")
-        analyze = Analyzer.Analyzer(image1)
-        fichier.write(str(analyze.entropy(1)) + "\n")
-        print(i)
-
-def graph_entropy_all_image():
-    patients_list = read_patient_list_file("ressources/Patients/PatientsList2.txt")
-
-    Y = [int(patient[4]) for patient in patients_list]
-    X = [patient[-1] for patient in patients_list]
-
-    print(X)
-    plt.scatter(Y, X)
-    plt.show()
-
 def min_color(image):
-    min_color = 255
+    minimum_color = 255
     for i in range(image.shape[0]):
         for j in range(image.shape[1]):
-            if image[i][j] < min_color:
-                min_color = image[i][j]
-    return min_color
+            if image[i][j] < minimum_color:
+                minimum_color = image[i][j]
+    return minimum_color
 
-def test_subimage_func(func, folder, folder_size, ratio_max = 3, color_min = 0, show_image=False):
+
+def test_subimage_func(func, folder, folder_size, ratio_max=3, color_min=0, show_image=False):
     nb_error = 0
-    error = None
     error_type = [0 for i in range(7)]
-
 
     for i in range(folder_size):
         image = cv2.imread(folder + "/" + str(i) + ".jpg", cv2.IMREAD_GRAYSCALE)
@@ -136,9 +116,8 @@ def test_subimage_func(func, folder, folder_size, ratio_max = 3, color_min = 0, 
                 cv2.imshow("subimg", subimg)
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
-            error = False
 
-    percent_correct = round((folder_size - nb_error) / folder_size * 100,1)
+    percent_correct = round((folder_size - nb_error) / folder_size * 100, 1)
 
     line_size = 66
     print("")
@@ -148,7 +127,7 @@ def test_subimage_func(func, folder, folder_size, ratio_max = 3, color_min = 0, 
     for i in range(0, int(percent_correct / 2.1) + 2):
         print(" ", end="")
     print("\033[1;31m" + str(percent_correct) + " % " + "\033[1;0m", end="")
-    for i in range(int(percent_correct / 2.1) + len(str(percent_correct)+ " %"), line_size-9):
+    for i in range(int(percent_correct / 2.1) + len(str(percent_correct) + " %"), line_size - 9):
         print(" ", end="")
     print("║")
 
@@ -199,17 +178,18 @@ def test_subimage_func(func, folder, folder_size, ratio_max = 3, color_min = 0, 
     print("║")
 
     nb_char = 0
-    print("║ Subimage has a ratio bigger than " + str(ratio_max) + ": \033[1;31m" + str(error_type[5]) + "\033[1;0m", end="")
+    print("║ Subimage has a ratio bigger than " + str(ratio_max) + ": \033[1;31m" + str(error_type[5]) + "\033[1;0m",
+          end="")
     nb_char += 38 + len(str(ratio_max)) + len(str(error_type[5]))
     for i in range(nb_char, line_size):
         print(" ", end="")
     print("║")
 
     nb_char = 0
-    print("║ Subimage has a color lower than " + str(color_min) + ": \033[1;31m" + str(error_type[6]) + "\033[1;0m", end="")
+    print("║ Subimage has a color lower than " + str(color_min) + ": \033[1;31m" + str(error_type[6]) + "\033[1;0m",
+          end="")
     nb_char += 39 + len(str(color_min)) + len(str(error_type[6]))
     for i in range(nb_char, line_size + 2):
         print(" ", end="")
     print("║")
     print("╚════════════════════════════════════════════════════════════════╝")
-

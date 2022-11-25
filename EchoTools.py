@@ -10,6 +10,7 @@ def smooth(image, filter, kernel_size):
     image_open_close = cv2.morphologyEx(image_open, cv2.MORPH_CLOSE, kernel)
     return image_open_close
 
+
 def sub_image(image):
     intersection = []
     image_filtered = smooth(image, 30, 7)
