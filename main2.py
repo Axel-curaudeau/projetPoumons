@@ -4,7 +4,10 @@ import EchoTools
 import Tools
 from matplotlib import pyplot as plt
 
-Tools.test_subimage_func(EchoTools.sub_image, "ressources/poumons2", folder_size=321, ratio_max=5, show_image=False)
+#Tools.test_subimage_func(EchoTools.sub_image, "ressources/poumons2", folder_size=321, ratio_max=10, color_min=1, show_image=True)
+
+import tests
+tests.test_entropy()
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()

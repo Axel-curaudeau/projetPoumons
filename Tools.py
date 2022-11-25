@@ -96,48 +96,58 @@ def min_color(image):
 
 def test_subimage_func(func, folder, folder_size, ratio_max = 3, color_min = 0, show_image=False):
     nb_error = 0
-    error = False
+    error = None
+    error_type = [0 for i in range(7)]
+
 
     for i in range(folder_size):
         image = cv2.imread(folder + "/" + str(i) + ".jpg", cv2.IMREAD_GRAYSCALE)
         subimg = func(image)
 
         if subimg is None:
-            error = True
+            error = "No subimage found"
+            error_type[0] += 1
         elif subimg.shape[0] == 0 or subimg.shape[1] == 0:
-            error = True
+            error = "Subimage has a dimension of 0"
+            error_type[1] += 1
         elif subimg.shape[0] > image.shape[0] or subimg.shape[1] > image.shape[1]:
-            error = True
+            error = "Subimage is bigger than the original image"
+            error_type[2] += 1
         elif subimg.shape[0] < 0 or subimg.shape[1] < 0:
-            error = True
+            error = "Subimage has a negative dimension"
+            error_type[3] += 1
         elif subimg.shape[0] == image.shape[0] and subimg.shape[1] == image.shape[1]:
-            error = True
+            error = "Subimage is the same size as the original image"
+            error_type[4] += 1
         elif subimg.shape[0] > (subimg.shape[1] * ratio_max) or subimg.shape[1] > (subimg.shape[0] * ratio_max):
-            error = True
+            error = "Subimage has a ratio bigger than " + str(ratio_max)
+            error_type[5] += 1
         elif min_color(subimg) < color_min:
-            error = True
+            error = "Subimage has a color lower than " + str(color_min)
+            error_type[6] += 1
         else:
             error = False
 
         if error:
             nb_error += 1
-            error = False
-            print("Error on image " + str(i))
+            print("Error on image " + str(i) + ": " + error)
             if show_image:
-                cv2.imshow("image", image)
+                cv2.imshow("Image " + str(i) + " - " + error, image)
                 cv2.imshow("subimg", subimg)
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
+            error = False
 
     percent_correct = round((folder_size - nb_error) / folder_size * 100,1)
 
     line_size = 66
+    print("")
     print("╔══════════════════════ Correct Image Rate ══════════════════════╗")
 
     print("║    ", end="")
     for i in range(0, int(percent_correct / 2.1) + 2):
         print(" ", end="")
-    print(str(percent_correct) + " % ", end="")
+    print("\033[1;31m" + str(percent_correct) + " % " + "\033[1;0m", end="")
     for i in range(int(percent_correct / 2.1) + len(str(percent_correct)+ " %"), line_size-9):
         print(" ", end="")
     print("║")
@@ -153,12 +163,12 @@ def test_subimage_func(func, folder, folder_size, ratio_max = 3, color_min = 0, 
         nb_char += 1
     for i in range(nb_char, 57):
         print("-", end="")
-    if percent_correct % 2 == 0 and percent_correct != 100:
+    if percent_correct % 2 == 0 and percent_correct != 100 and percent_correct != 0:
         print("-", end="")
     print("| 100 % ║")
 
-    print("╠════════════════════════════════════════════════════════════════╣")
-    print("║ Number of error: " + str(nb_error), end="")
+    print("╠════════════════════════ Global  Report ════════════════════════╣")
+    print("║ Number of error: \033[1;31m" + str(nb_error) + "\033[1;0m", end="")
     for i in range(0, line_size - 20 - len(str(nb_error))):
         print(" ", end="")
     print("║")
@@ -166,8 +176,39 @@ def test_subimage_func(func, folder, folder_size, ratio_max = 3, color_min = 0, 
     for i in range(0, line_size - 20 - len(str(folder_size))):
         print(" ", end="")
     print("║")
-    print("║ Percentage of error: " + str(round(nb_error / folder_size * 100,1)) + "%", end="")
-    for i in range(0, line_size - 25 - len(str(round(nb_error / folder_size * 100,1)))):
+    print("╠═════════════════════════ Error Report ═════════════════════════╣")
+    print("║ No subimage found: \033[1;31m" + str(error_type[0]) + "\033[1;0m", end="")
+    for i in range(0, line_size - 22 - len(str(error_type[0]))):
+        print(" ", end="")
+    print("║")
+    print("║ Subimage has a dimension of 0: \033[1;31m" + str(error_type[1]) + "\033[1;0m", end="")
+    for i in range(0, line_size - 34 - len(str(error_type[1]))):
+        print(" ", end="")
+    print("║")
+    print("║ Subimage is bigger than the original image: \033[1;31m" + str(error_type[2]) + "\033[1;0m", end="")
+    for i in range(0, line_size - 47 - len(str(error_type[2]))):
+        print(" ", end="")
+    print("║")
+    print("║ Subimage has a negative dimension: \033[1;31m" + str(error_type[3]) + "\033[1;0m", end="")
+    for i in range(0, line_size - 38 - len(str(error_type[3]))):
+        print(" ", end="")
+    print("║")
+    print("║ Subimage is the same size as the original image: \033[1;31m" + str(error_type[4]) + "\033[1;0m", end="")
+    for i in range(0, line_size - 52 - len(str(error_type[4]))):
+        print(" ", end="")
+    print("║")
+
+    nb_char = 0
+    print("║ Subimage has a ratio bigger than " + str(ratio_max) + ": \033[1;31m" + str(error_type[5]) + "\033[1;0m", end="")
+    nb_char += 38 + len(str(ratio_max)) + len(str(error_type[5]))
+    for i in range(nb_char, line_size):
+        print(" ", end="")
+    print("║")
+
+    nb_char = 0
+    print("║ Subimage has a color lower than " + str(color_min) + ": \033[1;31m" + str(error_type[6]) + "\033[1;0m", end="")
+    nb_char += 39 + len(str(color_min)) + len(str(error_type[6]))
+    for i in range(nb_char, line_size + 2):
         print(" ", end="")
     print("║")
     print("╚════════════════════════════════════════════════════════════════╝")
