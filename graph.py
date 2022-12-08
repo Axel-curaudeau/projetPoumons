@@ -21,6 +21,7 @@ def graph_sub_image():
         if entropy > 2:
             list_entropy.append(entropy)
             numbers_b_lines.append(int(patient[4]))
+    print("Nombre de valeur : ", len(list_entropy))
     plt.scatter(numbers_b_lines, list_entropy)
     plt.show()
 
@@ -34,25 +35,19 @@ def graph_entropy_all_image():
     Y = [int(patient[4]) for patient in patients_list]
     X = [patient[-1] for patient in patients_list]
 
-    print(X)
+    print("Nombre de valeur :", len(X))
     plt.scatter(Y, X)
     plt.show()
 
-def graph_sub_image_slide_entropy():
+def graph_sub_image_slide_entropy(path, show_image=False):
     """
     Show one graph for all image using the slide_entropy function.
     """
-    ressources_path = "./ressources/Patients/"
-    patient_list = Tools.read_patient_list_file("ressources/Patients/PatientsList2.txt")
-    for patient in patient_list:
-        path = Tools.get_echo_path(patient)
-        image = cv2.imread(ressources_path + path, cv2.IMREAD_GRAYSCALE)
-        sub_image = EchoTools.sub_image(image)
-        entropy = EchoTools.slide_entropy(image, 10, "horizontal")
-        entropy_vert = EchoTools.slide_entropy(image, 10, "vertical")
-        print(patient[4])
-        plt.plot(entropy)
-        plt.plot(entropy_vert)
-        cv2.imshow(str(patient[4]), image)
-        plt.show()
-        cv2.waitKey(0)
+    image = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+    entropy = EchoTools.slide_entropy(image, 10, "horizontal")
+    entropy_vert = EchoTools.slide_entropy(image, 10, "vertical")
+    plt.plot(entropy)
+    plt.plot(entropy_vert)
+    cv2.imshow(path, image)
+    plt.show()
+    cv2.waitKey(0)

@@ -1,7 +1,12 @@
+# Objectif
+Tester si la valeur de l'entropie peut vraiment compter les lignes B ? 
+
+Comment ? en ne gardant que le centre et la partie interesssante ?
+
 # Travail à faire
 - [x] Réoganiser le projet (avec des classes/modules)
-- Tester si la valeur de l'entropie peut vraiment compter les lignes B ? 
-  Comment ? en ne gardant que le centre et la partie interesssante ?
+- [ ] Graphe de l'entropie sur une image Dicom dont on connait le nombre de lignes B
+- [ ] 
 
 # Programmation
 - Fonction ou méthode pour enlever les ombres des côtes
