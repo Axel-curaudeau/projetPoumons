@@ -1,6 +1,8 @@
 import csv
 import cv2
-import Analyzer
+import numpy
+import Patient
+
 
 RESSOURCES_PATH = "ressources/"
 
@@ -44,7 +46,7 @@ def read_patient_list_file(patient_file_path):
 
 
 def write_patient_list_file(patient_file_path, patient_list):
-    patient_file = open(patient_file_path + "2", "w")
+    patient_file = open(patient_file_path, "w")
     for i in patient_list:
         for j in i:
             patient_file.write(str(j))
@@ -78,7 +80,7 @@ def min_color(image):
 
 def test_subimage_func(func, folder, folder_size, ratio_max=3, color_min=0, show_image=False):
     nb_error = 0
-    error_type = [0 for i in range(7)]
+    error_type = [0 for _ in range(7)]
 
     for i in range(folder_size):
         image = cv2.imread(folder + "/" + str(i) + ".jpg", cv2.IMREAD_GRAYSCALE)
@@ -193,3 +195,32 @@ def test_subimage_func(func, folder, folder_size, ratio_max=3, color_min=0, show
         print(" ", end="")
     print("║")
     print("╚════════════════════════════════════════════════════════════════╝")
+
+
+def compute_entropy_all_dicom_file():
+    folder_path = "C:/Users/axell/OneDrive - Université de Tours/Boucles echo TOUPIE (2)"
+    patient_object_list = Patient.search_all_patient(folder_path)
+    # list = Patient.search_all_patient("../Patients/Patients")
+
+    b_lines = read_patient_list_file("./ressources/Patients/PatientsList.txt")
+
+    print(b_lines)
+
+    for patient in patient_object_list:
+        print(patient.name, " | ", patient.path, " | ", len(patient.list_of_exams))
+        for exam in patient.list_of_exams:
+            print("\t", exam.name, " | ", exam.path, " | ", len(exam.image_list), " | ", len(exam.dicom_image_list))
+            for image in exam.dicom_image_list:
+                print("\t\t", image.name, " | ", image.path)
+
+                for i in range(len(b_lines)):
+                    if b_lines[i][0].__contains__(patient.name) or patient.name.__contains__(b_lines[i][0]):
+                        if exam.name.__contains__(b_lines[i][1]):
+                            if b_lines[i][2].__contains__(image.name):
+                                entropy_list = image.EntropyList()
+                                mean = numpy.mean(entropy_list)
+                                print("\t\t\t", b_lines[i][4], " | ", mean)
+                                b_lines[i].append(mean)
+
+    write_patient_list_file("./ressources/Patients/PatientsList3.txt", b_lines)
+    print("end")

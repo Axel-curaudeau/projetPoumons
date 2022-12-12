@@ -26,14 +26,14 @@ def graph_sub_image():
     plt.show()
 
 
-def graph_entropy_all_image():
+def graph_entropy_all_image(patient_list_file_path):
     """
     Show the graph with entropy value of all images, in function of their number of B lines.
     """
-    patients_list = Tools.read_patient_list_file("ressources/Patients/PatientsList2.txt")
+    patients_list = Tools.read_patient_list_file(patient_list_file_path)
 
     Y = [int(patient[4]) for patient in patients_list]
-    X = [patient[-1] for patient in patients_list]
+    X = [float(patient[-1]) for patient in patients_list]
 
     print("Nombre de valeur :", len(X))
     plt.scatter(Y, X)
