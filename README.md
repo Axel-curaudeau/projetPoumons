@@ -30,6 +30,8 @@ réduire la taille de l'image et trouver le rectangle, puis convertir ses coordo
 
 - rognage de l'image pour ne garder que la partie significative pour les lignes B
   - traitement afin de décider automatiquement quelle partie de l'image on garde
-  - optimisation du traitement "smooth" car trop lent.
+  - optimisation du traitement "smooth" car trop lent. (opencv)
+  - 
 
-Demander a la medecin quelle valeur on garde pour un patient, le maximum, la moyenne ?
+- récupération des vrai images (dicom)
+  - 

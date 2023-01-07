@@ -3,8 +3,14 @@ import cv2
 import Entropy
 
 
-def smooth(image, filter, kernel_size):
-    image_filter = cv2.threshold(image, filter, 255, cv2.THRESH_BINARY)[1]
+def smooth(image, filter_value, kernel_size):
+    """
+    :param image: image to be filtered.
+    :param filter_value: value of the threshold filter.
+    :param kernel_size: value for smoothing the image to reduce noise.
+    :return: the image filtered and smoothed.
+    """
+    image_filter = cv2.threshold(image, filter_value, 255, cv2.THRESH_BINARY)[1]
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (kernel_size, kernel_size))
     image_open = cv2.morphologyEx(image_filter, cv2.MORPH_OPEN, kernel)
     image_open_close = cv2.morphologyEx(image_open, cv2.MORPH_CLOSE, kernel)
@@ -12,10 +18,13 @@ def smooth(image, filter, kernel_size):
 
 
 def sub_image(image):
+    """
+    :param image: image to be cut.
+    :return: the sub-image as a numpy array.
+    """
     intersection = []
     image_filtered = smooth(image, 30, 7)
     width = len(image_filtered[0])
-    height = len(image_filtered)
 
     for i in range(50, width - 50):
         if image_filtered[300, i] == 255 and image_filtered[300, i - 1] == 0:
@@ -37,11 +46,18 @@ def sub_image(image):
     # cv2.rectangle(image, (xl, 300), (xr, 200), 155, 2)
     # image.addRectangle(xl, 300, xr - xl, -100, (0, 0, 255))
 
-    #cv2.imshow("filter", image_filtered)
-    #print(xl, " ", xr)
-    return image[200:300, xl:xr]
+    # cv2.imshow("filter", image_filtered)
+    # print(xl, " ", xr)
+    return image[:, xl:xr]
+
 
 def slide_entropy(img, slide_width, orientation):
+    """
+    :param img: Image to be analyzed.
+    :param slide_width: Width of the sliding window.
+    :param orientation: Orientation of the sliding window.
+    :return: The list of the entropy values of the sliding window.
+    """
     list_entropy = []
     if orientation == "vertical":
         for x in range(0, img.shape[1] - slide_width):

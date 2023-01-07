@@ -3,7 +3,6 @@ import cv2
 import numpy
 import Patient
 
-
 RESSOURCES_PATH = "ressources/"
 
 
@@ -217,10 +216,20 @@ def compute_entropy_all_dicom_file():
                     if b_lines[i][0].__contains__(patient.name) or patient.name.__contains__(b_lines[i][0]):
                         if exam.name.__contains__(b_lines[i][1]):
                             if b_lines[i][2].__contains__(image.name):
-                                entropy_list = image.EntropyList()
+                                entropy_list = image.entropy_list()
                                 mean = numpy.mean(entropy_list)
                                 print("\t\t\t", b_lines[i][4], " | ", mean)
                                 b_lines[i].append(mean)
 
     write_patient_list_file("./ressources/Patients/PatientsList3.txt", b_lines)
     print("end")
+
+
+def print_patients(patient_object_list):
+    for patient in patient_object_list:
+        print(patient.name, " | ", patient.path, " | ", len(patient.list_of_exams))
+        for exam in patient.list_of_exams:
+            print("\t", exam.name, " | ", exam.path, " | ", len(exam.image_list), " | ", len(exam.dicom_image_list))
+            for image in exam.dicom_image_list:
+                print("\t\t", image.name, " | ", image.path)
+    return

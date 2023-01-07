@@ -4,7 +4,6 @@ import DicomImage
 
 
 class Exam:
-
     path = ""
     name = ""
     image_list = []
@@ -15,21 +14,26 @@ class Exam:
         self.path = exam_path
         self.image_list = []
         self.dicom_image_list = []
+
+        '''
+        Search all images in the exam folder and add them to the image list.
+        '''
         dir_list = os.listdir(exam_path)
         for file in dir_list:
             if os.path.isdir(self.path + "/" + file):
+                ''' If the file is a folder, we search in it. '''
                 self.name += "/" + file
                 dir_sublist = os.listdir(self.path + "/" + file)
                 for subfile in dir_sublist:
                     if not subfile.__contains__("."):
-                        self.dicom_image_list.append(DicomImage.DicomImage(self.path + "/" + file + "/" + subfile, subfile))
+                        self.dicom_image_list.append(
+                            DicomImage.DicomImage(self.path + "/" + file + "/" + subfile, subfile))
                     else:
                         self.image_list.append(Image.Image(subfile, self.path + "/" + file + "/" + subfile))
             elif not file.__contains__("."):
+                ''' If the file is a dicom file. '''
                 self.dicom_image_list.append(DicomImage.DicomImage(self.path + "/" + file, file))
             elif file.__contains__(".ini"):
                 pass
-            else :
+            else:
                 self.image_list.append(Image.Image(file, self.path + "/" + file))
-            # print(self.name)
-
