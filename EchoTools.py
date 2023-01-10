@@ -14,6 +14,13 @@ def smooth(image, filter_value, kernel_size):
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (kernel_size, kernel_size))
     image_open = cv2.morphologyEx(image_filter, cv2.MORPH_OPEN, kernel)
     image_open_close = cv2.morphologyEx(image_open, cv2.MORPH_CLOSE, kernel)
+
+    # cv2.imshow("image", image)
+    # cv2.imshow("image_filter", image_filter)
+    # cv2.imshow("image_open", image_open)
+    # cv2.imshow("image_open_close", image_open_close)
+    # cv2.waitKey(0)
+
     return image_open_close
 
 
@@ -47,6 +54,8 @@ def sub_image(image):
     # image.addRectangle(xl, 300, xr - xl, -100, (0, 0, 255))
 
     # cv2.imshow("filter", image_filtered)
+    # cv2.imshow("image", image)
+    # cv2.waitKey(0)
     # print(xl, " ", xr)
     return image[:, xl:xr]
 
